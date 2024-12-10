@@ -1,8 +1,17 @@
-// import { useState } from 'react'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
 
 export const App = () => {
-  // const [count, setCount] = useState(0)
+  const [inputValue, setInputValue] = useState('');
+
+  const enterNewInput = () => {
+    const newValue = prompt('Введите новое значение:');
+    if (newValue !== null && newValue.length >= 3) {
+      setInputValue(newValue);
+    } else if (newValue !== null) {
+      alert('Введенное значение должно содержать минимум 3 символа');
+    }
+  };
 
   return (
     <>
@@ -14,8 +23,12 @@ export const App = () => {
         </p>
         <div className="error">Введенное значение должно содержать минимум 3 символа</div>
         <div className="buttons-container">
-          <button className="button">Ввести новое</button>
-          <button className="button" disabled>Добавить в список</button>
+          <button className="button" onClick={enterNewInput}>
+            Ввести новое
+          </button>
+          <button className="button" disabled>
+            Добавить в список
+          </button>
         </div>
         <div className="list-container">
           <h2 className="list-heading">Список:</h2>
@@ -26,8 +39,8 @@ export const App = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
 // return (
 //   <>
