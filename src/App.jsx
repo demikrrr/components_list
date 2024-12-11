@@ -3,13 +3,18 @@ import './App.css';
 
 export const App = () => {
   const [inputValue, setInputValue] = useState('');
+  const [buttonState, setButtonState] = useState(true);
+  const [errorState, setErrorState] = useState(true);
 
   const enterNewInput = () => {
     const newValue = prompt('Введите новое значение:');
     if (newValue !== null && newValue.length >= 3) {
       setInputValue(newValue);
-    } else if (newValue !== null) {
-      alert('Введенное значение должно содержать минимум 3 символа');
+      setButtonState(false);
+      setErrorState(true);
+    } else {
+      setErrorState(false);
+      setButtonState(true);
     }
   };
 
@@ -18,15 +23,17 @@ export const App = () => {
       <div className="app">
         <h1 className="page-heading">Ввод значения</h1>
         <p className="no-margin-text">
-          Текущее значение
+          Текущее значение: "{inputValue}"
           {/* <code>value</code>: "<output class="current-value"></output>" */}
         </p>
-        <div className="error">Введенное значение должно содержать минимум 3 символа</div>
+        <div className="error" hidden={errorState}>
+          Введенное значение должно содержать минимум 3 символа
+        </div>
         <div className="buttons-container">
           <button className="button" onClick={enterNewInput}>
             Ввести новое
           </button>
-          <button className="button" disabled>
+          <button className="button" disabled={buttonState}>
             Добавить в список
           </button>
         </div>
@@ -41,28 +48,3 @@ export const App = () => {
     </>
   );
 };
-
-// return (
-//   <>
-//     <div>
-//       <a href="https://vite.dev" target="_blank">
-//         <img src={viteLogo} className="logo" alt="Vite logo" />
-//       </a>
-//       <a href="https://react.dev" target="_blank">
-//         <img src={reactLogo} className="logo react" alt="React logo" />
-//       </a>
-//     </div>
-//     <h1>Vite + React</h1>
-//     <div className="card">
-//       <button onClick={() => setCount((count) => count + 1)}>
-//         count is {count}
-//       </button>
-//       <p>
-//         Edit <code>src/App.jsx</code> and save to test HMR
-//       </p>
-//     </div>
-//     <p className="read-the-docs">
-//       Click on the Vite and React logos to learn more
-//     </p>
-//   </>
-// )
