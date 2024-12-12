@@ -5,6 +5,13 @@ export const App = () => {
   const [inputValue, setInputValue] = useState('');
   const [buttonState, setButtonState] = useState(true);
   const [errorState, setErrorState] = useState(true);
+  const [list, updatedList] = useState([]);
+
+  const onAddButtonClick = () => {
+    updatedList([...list, { id: Date.now(), name: inputValue }]);
+    setInputValue('');
+    setButtonState(true);
+  };
 
   const enterNewInput = () => {
     const newValue = prompt('Введите новое значение:');
@@ -15,6 +22,22 @@ export const App = () => {
     } else {
       setErrorState(false);
       setButtonState(true);
+    }
+  };
+
+  const listLayout = () => {
+    if (list.length === 0) {
+      return <p className="no-margin-text">Нет добавленных элементов</p>;
+    } else {
+      return (
+        <ul className="list">
+          {list.map(({ id, name }) => (
+            <li className="list-item" key={id}>
+              {name}
+            </li>
+          ))}
+        </ul>
+      );
     }
   };
 
@@ -33,16 +56,13 @@ export const App = () => {
           <button className="button" onClick={enterNewInput}>
             Ввести новое
           </button>
-          <button className="button" disabled={buttonState}>
+          <button className="button" disabled={buttonState} onClick={onAddButtonClick}>
             Добавить в список
           </button>
         </div>
         <div className="list-container">
           <h2 className="list-heading">Список:</h2>
-          <p className="no-margin-text">Нет добавленных элементов</p>
-          <ul className="list">
-            <li className="list-item">Первый элемент</li>
-          </ul>
+          {listLayout()}
         </div>
       </div>
     </>
