@@ -2,42 +2,36 @@ import { useState } from 'react';
 import './App.css';
 
 export const App = () => {
-  const [inputValue, setInputValue] = useState('');
-  const [buttonState, setButtonState] = useState(true);
-  const [errorState, setErrorState] = useState(true);
+  const [value, setValue] = useState('');
   const [list, updatedList] = useState([]);
+  const [error, setError] = useState([]);
+  const [isValueVaild, setIsValueVaild] = useState(false);
 
-  const onAddButtonClick = () => {
-    updatedList([...list, { id: Date.now(), name: inputValue }]);
-    setInputValue('');
-    setButtonState(true);
-  };
+  const onInputButtonClick = () => {
+    const promptValue = prompt('Введите новое значение:');
 
-  const enterNewInput = () => {
-    const newValue = prompt('Введите новое значение:');
-    if (newValue !== null && newValue.length >= 3) {
-      setInputValue(newValue);
-      setButtonState(false);
-      setErrorState(true);
+    if (promptValue !== null && promptValue.length >= 3) {
+      setValue(promptValue);
+      setError('');
+      setIsValueVaild(true);
     } else {
-      setErrorState(false);
-      setButtonState(true);
+      setError('Введенное значение должно содержать минимум 3 символа');
+      setIsValueVaild(false);
     }
   };
 
-  const listLayout = () => {
-    if (list.length === 0) {
-      return <p className="no-margin-text">Нет добавленных элементов</p>;
-    } else {
-      return (
-        <ul className="list">
-          {list.map(({ id, name }) => (
-            <li className="list-item" key={id}>
-              {name}
-            </li>
-          ))}
-        </ul>
-      );
+  const onAddButtonClick = () => {
+    if (value !== null && value.length >= 3) {
+      updatedList([
+        ...list,
+        {
+          id: Date.now(),
+          name: value,
+          time: new Date().toISOString().replace('T', ' ').substring(0, 19),
+        },
+      ]);
+      setValue('');
+      setIsValueVaild(false);
     }
   };
 
@@ -45,24 +39,29 @@ export const App = () => {
     <>
       <div className="app">
         <h1 className="page-heading">Ввод значения</h1>
-        <p className="no-margin-text">
-          Текущее значение: "{inputValue}"
-          {/* <code>value</code>: "<output class="current-value"></output>" */}
-        </p>
-        <div className="error" hidden={errorState}>
-          Введенное значение должно содержать минимум 3 символа
-        </div>
+        <p className="no-margin-text">Текущее значение: "{value}"</p>
+        {error && <div className="error">{error}</div>}
         <div className="buttons-container">
-          <button className="button" onClick={enterNewInput}>
+          <button className="button" onClick={onInputButtonClick}>
             Ввести новое
           </button>
-          <button className="button" disabled={buttonState} onClick={onAddButtonClick}>
+          <button className="button" disabled={!isValueVaild} onClick={onAddButtonClick}>
             Добавить в список
           </button>
         </div>
         <div className="list-container">
           <h2 className="list-heading">Список:</h2>
-          {listLayout()}
+          {list.length === 0 ? (
+            <p className="no-margin-text">Нет добавленных элементов</p>
+          ) : (
+            <ul className="list">
+              {list.map(({ id, name, time }) => (
+                <li className="list-item" key={id}>
+                  {name}. Добавлено в список: {time}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </>
